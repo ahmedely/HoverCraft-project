@@ -1,80 +1,102 @@
+#include <MPU6050_light.h>
 
 
-/* Get tilt angles on X and Y, and rotation angle on Z
-    Angles are given in degrees
- License: MIT
- */
- //#include "Wire.h"
- #include <MPU6050_light.h>
- #include <Servo.h>
+//  ENGR 290 FALL 2022
+//  AUTONOMOUS HOVERCRAFT CODE
 
- MPU6050 mpu(Wire);
- unsigned long timer = 0;
-Servo myservo; 
-#define LED 13
-#define D3 11
+ // Team #08:
+ // Abdallah, Yasmine
+ // El Yamani, Ahmed
+ // Pedroza Hernandez, Marcelo
+ //Shirazi, Aryan
 
-float x;
 
- void setup() {
 
-   Serial.begin(9600);
-   Wire.begin();
-   myservo.attach(9);
-   byte status = mpu.begin();
+#include <Servo.h> 
+#include <MPU6050_light.h>
+
+#define liftFan  4
+#define pushFan 7                                                                                                                                       //P4
+#define backFan 6
+
+#define trigLeft 13
+#define echoLeft 3
+
+#define echoRight 2
+#define trigRight 11
+
+#define highPerfSensor 10
+
+const int backServoPin = 9;
+const int pushServoPin = 5;
+
+Servo backServo;
+Servo pushServo;
+
+MPU6050 mpu(Wire);
+unsigned long timer = 0;
+
+float pulse,frontDistance,durationL, distanceL, distanceR,durationR;
+float speed = 343; 
+int index=0;
+
+void setup() {
+  
+  pinMode(highPerfSensor, INPUT);
+
+  pinMode(liftFan,OUTPUT);
+  pinMode(pushFan,OUTPUT);
+  pinMode(backFan,OUTPUT);
+  
+  pinMode(trigLeft, OUTPUT);
+  pinMode(echoLeft, INPUT);
+  pinMode(trigRight, OUTPUT);
+  pinMode(echoRight, INPUT);
+
+  backServo.attach(backServoPin);
+  pushServo.attach(pushServoPin);
+
+//servo to neutral position
+
+  pushServo.write(90);
+  backServo.write(90);
+  
+  Serial.begin(9600); 
+  Wire.begin();
+  byte status = mpu.begin();
    Serial.print(F("MPU6050 status: "));
    Serial.println(status);
    while (status != 0) { } // stop everything if could not connect to MPU6050
- Serial.println(F("Calculating offsets, do not move MPU6050"));
-   delay(1000);
+   Serial.println(F("Calculating offsets, do not move MPU6050"));
    mpu.calcOffsets(); // gyro and accelero
    Serial.println("Done!\n");
-    //0->+-250, 1->+-500, 2->+-1000, 3->+-2000
-    mpu.setGyroConfig(0);
-    //0->+-2g, 1->+-4g, 2->+-8g, 3->+-16g
-    mpu.setAccConfig(0);
- }
- 
- void loop() {
-   mpu.update();
- if ((millis() - timer) > 10) { // print data every 10ms
-    Serial.print("X : ");
-    Serial.print(mpu.getAngleX());
-    Serial.print("\tY : ");
-    Serial.print(mpu.getAngleY());
-    Serial.print("\tZ : ");
-    Serial.print(mpu.getAngleZ());
-    Serial.print("tX acc : ");
-    Serial.print(mpu.getAccX());
-     Serial.print("\tY acc : ");
-     Serial.print(mpu.getAccY());
-     Serial.print("\tZ acc : ");
-     Serial.println(mpu.getAccZ());
-     timer = millis();
-   }
-  
- myservo.write(-(mpu.getAngleZ()-90));
-  
-  if(-(mpu.getAngleZ())>=90 || (-mpu.getAngleZ())<=-90){
-    digitalWrite(LED, HIGH);
+   delay(1000);
+   analogWrite(liftFan,255);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  mpu.update();
+  analogWrite(pushFan,190);
+  //control servos
+       if ((millis() - timer) > 10) { // print data every 10ms
+      Serial.print("Z : ");
+      Serial.println(mpu.getAngleZ());
+    }
+   // float angle;
+  if(mpu.getAngleZ()>=-90 && mpu.getAngleZ()<=90){
+    pushServo.write(90-mpu.getAngleZ());
   } 
-  else{digitalWrite(LED, LOW);
+  else if(mpu.getAngleZ()<=-90){
+    pushServo.write(90);
+    pushServo.write(-(mpu.getAngleZ()));
+
   } 
-
-
-
-  if(  abs(mpu.getAccX()) < 0.01) {
-    analogWrite(D3, 255);
-  } else if( abs(mpu.getAccX()) > 1) {
-    analogWrite(D3, 0);
-  } else if(mpu.getAccX()>=-1 && mpu.getAccX()<=-0.01) {
-    x=257.57*mpu.getAccX()+257.57;
-    analogWrite(D3,x);    
-  } else if(mpu.getAccX()>=0.01 && mpu.getAccX()<=1) {
-    x=-257.57*mpu.getAccX()+257.57;
-    analogWrite(D3,x);    
-
-  
+  else if(mpu.getAngleZ()>=90){
+    pushServo.write(180-(mpu.getAngleZ()));
   }
-  
+
+
+
 }
