@@ -75,17 +75,84 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  //IMU update
 
   mpu.update();
   analogWrite(pushFan,190);
   //control servos
        if ((millis() - timer) > 10) { // print data every 10ms
       Serial.print("Z : ");
+      Serial.print(mpu.getAngleZ());
+    }
+    if(-(mpu.getAngleZ())>=90 || (-mpu.getAngleZ())<=-90){
+     pushServo.write(90+mpu.getAngleZ());
+  } 
+  else{
+    pushServo.write(90-mpu.getAngleZ());
+  } 
+
+
+
+ //read front distance
+  pulse = pulseIn(highPerfSensor, HIGH);
+  //delay(200);
+  frontDistance =  (pulse/147) * 2.54;
+  Serial.print("\tF sensor: ");
+  Serial.print(frontDistance);
+  Serial.println("cm");
+  
+  if(frontDistance<15){
+    analogWrite(pushFan,0);
+
+//read right sensor
+     digitalWrite(trigRight, LOW);
+  delayMicroseconds(10);
+  digitalWrite(trigRight, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigRight, LOW);
+
+  durationR = pulseIn(echoRight, HIGH);
+  distanceR=((speed*durationR)/10000)/2;
+
+    Serial.print("\tSensor R: ");
+  Serial.print(distanceR);
+  Serial.print(" cm\t");
+ 
+  //left sensor
+
+
+  digitalWrite(trigLeft, LOW);
+  delayMicroseconds(10);
+  digitalWrite(trigLeft, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigLeft, LOW);
+ 
+  durationL = pulseIn(echoLeft, HIGH);
+ 
+  distanceL=((speed*durationL)/10000)/2;
+
+  Serial.print("Sensor L: ");
+  Serial.print(distanceL);
+  Serial.println(" cm");
+
+  if(distanceL>distanceR){
+    turnLeft();
+  }
+  else{
+    turnRight();
+  }
+  }
+ else{
+   //forward prop.
+ analogWrite(pushFan,190);
+  //control servos
+
+       if ((millis() - timer) > 10) { // print data every 10ms
+      Serial.print("Z : ");
       Serial.println(mpu.getAngleZ());
     }
    // float angle;
-  if(mpu.getAngleZ()>=-90 && mpu.getAngleZ()<=90){
+ if(mpu.getAngleZ()>=-90 && mpu.getAngleZ()<=90){
     pushServo.write(90-mpu.getAngleZ());
   } 
   else if(mpu.getAngleZ()<=-90){
@@ -97,6 +164,31 @@ void loop() {
     pushServo.write(180-(mpu.getAngleZ()));
   }
 
+ }
+}
 
+void turnLeft(){
 
+  backServo.write(180);
+  pushServo.write(180);
+  
+  analogWrite(pushFan,200);
+  analogWrite(backFan,200);
+  delay(2000);
+  analogWrite(backFan,0);
+  pushServo.write(90);
+  backServo.write(90); 
+
+}
+
+void turnRight(){  
+  backServo.write(0);
+  pushServo.write(0);
+  analogWrite(pushFan,200);
+  analogWrite(backFan,200);
+  delay(2000);
+  analogWrite(backFan,0);
+  pushServo.write(90);
+  backServo.write(90);
+ 
 }
