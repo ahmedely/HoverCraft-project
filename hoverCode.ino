@@ -1,170 +1,191 @@
-/*
-  ENGR 290 FALL 2022
-  AUTONOMOUS HOVERCRAFT CODE
+//  ENGR 290 FALL 2022
+//  AUTONOMOUS HOVERCRAFT CODE
 
-  Team #08:
-  Abdallah, Yasmine
-  El Yamani, Ahmed
-  Pedroza Hernandez, Marcelo
-  Shirazi, Aryan
+ // Team #08:
+ // Abdallah, Yasmine
+ // El Yamani, Ahmed
+ // Pedroza Hernandez, Marcelo
+ // Shirazi, Aryan
 
-  *NOTES*
 
-  tailFan pin is YET TO BE DETERMINED, for now all of its code is commented out.
-  possible tailFan pins are:
-  P18: (PD7 = 7) ON/OFF channel 0 negative terminal for the fan. Drain of the control MOSFET. NOT GND!
-  P17: (PD4 = 4) ON/OFF channel 1 negative terminal for the fan. Drain of the control MOSFET. NOT GND!
-  P11: IF (P9 = 9) is used for servo, P11 CANNOT be used for fan. IF NOT: Pin#1 (yellow wire) of a servo-motor connector goes to this pin.
 
-  *** liftFan and servoTailPin are both connected to (P3 = 5) THIS MUST BE CHANGED ***
-
-*/
-
-//Libraries
 #include <Servo.h> 
+#include <MPU6050_light.h>
 
-//Pin Assignments
-//Fans
-#define liftFan  5 //P3
-#define noseFan 6 //P4
-//#define tailFan //TBD
-//US LEFT
-#define trigPinL 11 //P6
-#define echoPinL 2 //P6
-//US RIGHT
-#define trigPinR 13 //P13
-#define echoPinR 3 //P13
-//US High Perf
-const int highPerf = 8; //P10
-//Servos
-const int servoNosePin = 9; //P11
-const int servoTailPin = 5; //P3
+#define liftFan  4
+#define pushFan 7                                                                                                                                       //P4
+#define backFan 6
 
-//Servo Objects
-Servo servoNose;
-Servo servoTail; 
+#define trigLeft 13
+#define echoLeft 3
 
-//Variables
-float durationL, durationR, distanceL, distanceR;
-float pulse, inches, distanceNose;
+#define echoRight 2
+#define trigRight 11
+
+#define highPerfSensor 10
+
+const int backServoPin = 9;
+const int pushServoPin = 5;
+
+Servo backServo;
+Servo pushServo;
+
+MPU6050 mpu(Wire);
+unsigned long timer = 0;
+
+float pulse,frontDistance,durationL, distanceL, distanceR,durationR;
 float speed = 343; 
+int index=0;
 
 void setup() {
-  Serial.begin(9600); 
   
-  pinMode(trigPinL, OUTPUT);
-  pinMode(echoPinL, INPUT);
-  pinMode(trigPinR, OUTPUT);
-  pinMode(echoPinR, INPUT);
-  pinMode(highPerf, INPUT);
+  pinMode(highPerfSensor, INPUT);
 
-  servoNose.attach(servoNosePin);
-  servoTail.attach(servoTailPin);
+  pinMode(liftFan,OUTPUT);
+  pinMode(pushFan,OUTPUT);
+  pinMode(backFan,OUTPUT);
+  
+  pinMode(trigLeft, OUTPUT);
+  pinMode(echoLeft, INPUT);
+  pinMode(trigRight, OUTPUT);
+  pinMode(echoRight, INPUT);
 
-  //Set Fans on Servos to Neutral Position
-  servoNose.write(90);
-  servoTail.write(90);
+  backServo.attach(backServoPin);
+  pushServo.attach(pushServoPin);
+
+//servo to neutral position
+
+  pushServo.write(90);
+  backServo.write(90);
+  
+  Serial.begin(9600); 
+  Wire.begin();
+  byte status = mpu.begin();
+   Serial.print(F("MPU6050 status: "));
+   Serial.println(status);
+   while (status != 0) { } // stop everything if could not connect to MPU6050
+   Serial.println(F("Calculating offsets, do not move MPU6050"));
+   mpu.calcOffsets(); // gyro and accelero
+   Serial.println("Done!\n");
+   delay(1000);
+   analogWrite(liftFan,255);
 }
 
 void loop() {
+  //IMU update
 
-  //Left US Pulse & Distance
-  digitalWrite(trigPinL, LOW);
-  delayMicroseconds(10);
-  digitalWrite(trigPinL, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPinL, LOW);
-  durationL = pulseIn(echoPinL, HIGH);
-  distanceL=((speed*durationL)/10000)/2;
+  mpu.update();
+  analogWrite(pushFan,190);
+  //control servos
+       if ((millis() - timer) > 10) { // print data every 10ms
+      Serial.print("Z : ");
+      Serial.print(mpu.getAngleZ());
+    }
+    if(-(mpu.getAngleZ())>=90 || (-mpu.getAngleZ())<=-90){
+     pushServo.write(90+mpu.getAngleZ());
+  } 
+  else{
+    pushServo.write(90-mpu.getAngleZ());
+  } 
 
-  //Right US Pulse & Distance
-  digitalWrite(trigPinR, LOW);
+
+
+ //read front distance
+  pulse = pulseIn(highPerfSensor, HIGH);
+  //delay(200);
+  frontDistance =  (pulse/147) * 2.54;
+  Serial.print("\tF sensor: ");
+  Serial.print(frontDistance);
+  Serial.println("cm");
+  
+  if(frontDistance<15){
+    analogWrite(pushFan,0);
+
+//read right sensor
+     digitalWrite(trigRight, LOW);
   delayMicroseconds(10);
-  digitalWrite(trigPinR, HIGH);
+  digitalWrite(trigRight, HIGH);
   delayMicroseconds(10);
-  digitalWrite(trigPinR, LOW);
-  durationR = pulseIn(echoPinR, HIGH);
+  digitalWrite(trigRight, LOW);
+
+  durationR = pulseIn(echoRight, HIGH);
   distanceR=((speed*durationR)/10000)/2;
 
-  //Left US Print
-  Serial.print("Left Distance: ");
-  Serial.print(distanceL);
-  Serial.print(" cm ");
-  Serial.println(" ");
-
-  //Right US Print
-  Serial.print("Right Distance: ");
+    Serial.print("\tSensor R: ");
   Serial.print(distanceR);
-  Serial.print(" cm ");
-  Serial.println(" ");
-  
-  //highPerf Pulse & Distance
-  pulse = pulseIn(highPerf, HIGH);
-  inches = pulse / 147; //147uS per inch
-  distanceNose = inches * 2.54;
-  Serial.print("Nose Distance: ");
-  Serial.print(distanceNose);
-  Serial.print(" cm ");
-  Serial.println(" ");
+  Serial.print(" cm\t");
+ 
+  //left sensor
 
-  //Provide Lift
-  analogWrite(liftFan, 255);
 
-  //Stop Hovercraft When Close to Front Obstacle
-  if (distanceNose < 20) {
-//    analogWrite(tailFan, 0); //Tail Fan Off
-    analogWrite(noseFan, 50); //"Braking" Mechanism TBD
-    analogWrite(noseFan, 0); //Nose Fan Off
-    decisionTurn();
+  digitalWrite(trigLeft, LOW);
+  delayMicroseconds(10);
+  digitalWrite(trigLeft, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigLeft, LOW);
+ 
+  durationL = pulseIn(echoLeft, HIGH);
+ 
+  distanceL=((speed*durationL)/10000)/2;
+
+  Serial.print("Sensor L: ");
+  Serial.print(distanceL);
+  Serial.println(" cm");
+
+  if(distanceL>distanceR){
+    turnLeft();
+  }
+  else{
+    turnRight();
+  }
+  }
+ else{
+   //forward prop.
+ analogWrite(pushFan,190);
+  //control servos
+
+       if ((millis() - timer) > 10) { // print data every 10ms
+      Serial.print("Z : ");
+      Serial.println(mpu.getAngleZ());
     }
+   // float angle;
+ if(mpu.getAngleZ()>=-90 && mpu.getAngleZ()<=90){
+    pushServo.write(90-mpu.getAngleZ());
+  } 
+  else if(mpu.getAngleZ()<=-90){
+    pushServo.write(90);
+    pushServo.write(-(mpu.getAngleZ()));
 
-  //Provide Forward Propulsion
-//  else analogWrite(tailFan, 100);
-    
-  delay(100);
+  } 
+  else if(mpu.getAngleZ()>=90){
+    pushServo.write(180-(mpu.getAngleZ()));
+  }
+
+ }
 }
 
-void decisionTurn(){
-  if (distanceL < distanceR) rightTurn();
-  else if(distanceL > distanceR) leftTurn();
-}
+void turnLeft(){
 
-void rightTurn (){
-
-  //Both Fans Off
-//  analogWrite(tailFan, 0);
-  analogWrite(noseFan, 0);
-
-  //Position Fans on Servos
-  servoNose.write(180);
-  servoTail.write(170);
-
-  //Both Fans On (TIME ON TBD)
-//  analogWrite(tailFan, 100);
-  analogWrite(noseFan, 100);
-
-  //Both Fans Back to Neutral
-  servoNose.write(90);
-  servoTail.write(90);
+  backServo.write(180);
+  pushServo.write(180);
+  
+  analogWrite(pushFan,200);
+  analogWrite(backFan,200);
+  delay(2000);
+  analogWrite(backFan,0);
+  pushServo.write(90);
+  backServo.write(90); 
 
 }
 
-void leftTurn (){
-
-  //Both Fans Off
-//  analogWrite(tailFan, 0);
-  analogWrite(noseFan, 0);
-
-  //Position Fans on Servos
-  servoNose.write(10);
-  servoTail.write(10);
-
-  //Both Fans On (TIME ON TBD)
-//  analogWrite(tailFan, 100);
-  analogWrite(noseFan, 100);
-
-  //Both Fans Back to Neutral
-  servoNose.write(90);
-  servoTail.write(90);
-
+void turnRight(){  
+  backServo.write(0);
+  pushServo.write(0);
+  analogWrite(pushFan,200);
+  analogWrite(backFan,200);
+  delay(2000);
+  analogWrite(backFan,0);
+  pushServo.write(90);
+  backServo.write(90);
+ 
 }
