@@ -75,7 +75,7 @@ void loop() {
   //IMU update
 
   mpu.update();
-  analogWrite(pushFan,190);
+  analogWrite(pushFan,155);
   //control servos
        if ((millis() - timer) > 10) { // print data every 10ms
       Serial.print("Z : ");
@@ -98,8 +98,10 @@ void loop() {
   Serial.print(frontDistance);
   Serial.println("cm");
   
-  if(frontDistance<15){
+  if(frontDistance<35){
     analogWrite(pushFan,0);
+    analogWrite(backFan, 255);
+    delay(1000);
 
 //read right sensor
      digitalWrite(trigRight, LOW);
@@ -138,28 +140,11 @@ void loop() {
   else{
     turnRight();
   }
-  }
+}
  else{
    //forward prop.
- analogWrite(pushFan,190);
+ analogWrite(pushFan,155);
   //control servos
-
-       if ((millis() - timer) > 10) { // print data every 10ms
-      Serial.print("Z : ");
-      Serial.println(mpu.getAngleZ());
-    }
-   // float angle;
- if(mpu.getAngleZ()>=-90 && mpu.getAngleZ()<=90){
-    pushServo.write(90-mpu.getAngleZ());
-  } 
-  else if(mpu.getAngleZ()<=-90){
-    pushServo.write(90);
-    pushServo.write(-(mpu.getAngleZ()));
-
-  } 
-  else if(mpu.getAngleZ()>=90){
-    pushServo.write(180-(mpu.getAngleZ()));
-  }
 
  }
 }
@@ -169,9 +154,9 @@ void turnLeft(){
   backServo.write(180);
   pushServo.write(180);
   
-  analogWrite(pushFan,200);
-  analogWrite(backFan,200);
-  delay(2000);
+  analogWrite(pushFan,155);
+  analogWrite(backFan,155);
+  delay(1000);
   analogWrite(backFan,0);
   pushServo.write(90);
   backServo.write(90); 
@@ -181,9 +166,9 @@ void turnLeft(){
 void turnRight(){  
   backServo.write(0);
   pushServo.write(0);
-  analogWrite(pushFan,200);
-  analogWrite(backFan,200);
-  delay(2000);
+  analogWrite(pushFan,155);
+  analogWrite(backFan,155);
+  delay(1000);
   analogWrite(backFan,0);
   pushServo.write(90);
   backServo.write(90);
