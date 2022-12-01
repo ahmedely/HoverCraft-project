@@ -12,9 +12,9 @@
 #include <Servo.h> 
 #include <MPU6050_light.h>
 
-#define liftFan  4
-#define pushFan 7                                                                                                                                       //P4
-#define backFan 6
+#define liftFan  7
+#define pushFan 6                                                                                                                          //P4
+#define backFan 4
 
 #define trigLeft 13
 #define echoLeft 3
@@ -22,7 +22,7 @@
 #define echoRight 2
 #define trigRight 11
 
-#define highPerfSensor 10
+#define highPerfSensor 8
 
 const int backServoPin = 9;
 const int pushServoPin = 5;
@@ -49,6 +49,8 @@ void setup() {
   pinMode(echoLeft, INPUT);
   pinMode(trigRight, OUTPUT);
   pinMode(echoRight, INPUT);
+  pinMode(A1, INPUT);
+  analogReference(DEFAULT);  
 
   backServo.attach(backServoPin);
   pushServo.attach(pushServoPin);
@@ -69,13 +71,15 @@ void setup() {
    Serial.println("Done!\n");
    delay(1000);
    analogWrite(liftFan,255);
+   analogWrite(pushFan,255);
 }
+float adcVal;
 
 void loop() {
+  
   //IMU update
-
   mpu.update();
-  analogWrite(pushFan,155);
+  analogWrite(pushFan,255);
   //control servos
        if ((millis() - timer) > 10) { // print data every 10ms
       Serial.print("Z : ");
@@ -90,15 +94,12 @@ void loop() {
 
 
 
- //read front distance
-  pulse = pulseIn(highPerfSensor, HIGH);
-  //delay(200);
-  frontDistance =  (pulse/147) * 2.54;
-  Serial.print("\tF sensor: ");
-  Serial.print(frontDistance);
-  Serial.println("cm");
+  adcVal = analogRead(A1);
   
-  if(frontDistance<35){
+  
+  if(adcVal > 200){
+
+    //break
     analogWrite(pushFan,0);
     analogWrite(backFan, 255);
     delay(1000);
@@ -136,17 +137,10 @@ void loop() {
 
   if(distanceL>distanceR){
     turnLeft();
-  }
-  else{
+  } else{
     turnRight();
   }
-}
- else{
-   //forward prop.
- analogWrite(pushFan,155);
-  //control servos
-
- }
+  }
 }
 
 void turnLeft(){
@@ -154,23 +148,30 @@ void turnLeft(){
   backServo.write(180);
   pushServo.write(180);
   
-  analogWrite(pushFan,155);
-  analogWrite(backFan,155);
-  delay(1000);
+  analogWrite(pushFan,220);
+  analogWrite(backFan,220);
+  delay(750);
   analogWrite(backFan,0);
+  analogWrite(pushFan,0);
+  analogWrite(liftFan,0);
   pushServo.write(90);
   backServo.write(90); 
-
+  mpu.calcAccOffsets();
+  analogWrite(liftFan,255);
 }
 
 void turnRight(){  
   backServo.write(0);
   pushServo.write(0);
-  analogWrite(pushFan,155);
-  analogWrite(backFan,155);
-  delay(1000);
+  analogWrite(pushFan,220);
+  analogWrite(backFan,220);
+  delay(750);
   analogWrite(backFan,0);
+  analogWrite(pushFan,0);
+  analogWrite(liftFan,0);
   pushServo.write(90);
   backServo.write(90);
- 
+  mpu.calcAccOffsets();
+  analogWrite(liftFan,255);
+
 }
