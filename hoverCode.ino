@@ -2,12 +2,6 @@
 //  AUTONOMOUS HOVERCRAFT CODE
 
  // Team #08:
- // Abdallah, Yasmine
- // El Yamani, Ahmed
- // Pedroza Hernandez, Marcelo
- // Shirazi, Aryan
-
-
 
 #include <Servo.h> 
 #include <MPU6050_light.h>
