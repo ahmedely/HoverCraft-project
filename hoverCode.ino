@@ -65,7 +65,7 @@ void setup() {
    Serial.println("Done!\n");
    delay(1000);
    analogWrite(liftFan,255);
-   analogWrite(pushFan,255);
+  analogWrite(pushFan,255);
 }
 float adcVal;
 
@@ -73,30 +73,34 @@ void loop() {
   
   //IMU update
   mpu.update();
+
   analogWrite(pushFan,255);
   //control servos
-       if ((millis() - timer) > 10) { // print data every 10ms
-      Serial.print("Z : ");
-      Serial.print(mpu.getAngleZ());
-    }
-    if(-(mpu.getAngleZ())>=90 || (-mpu.getAngleZ())<=-90){
-     pushServo.write(90+mpu.getAngleZ());
-  } 
-  else{
-    pushServo.write(90-mpu.getAngleZ());
-  } 
+        if ((millis() - timer) > 10) { // print data every 10ms
+       Serial.print("Z : ");
+       Serial.print(mpu.getAngleZ());
+     }
 
+if(index == 0){
+ pushServo.write(90-mpu.getAngleZ());
+}
+    
 
 
   adcVal = analogRead(A1);
   
+  Serial.print("\t");
+  
+  Serial.println(adcVal);
   
   if(adcVal > 200){
 
     //break
     analogWrite(pushFan,0);
-    analogWrite(backFan, 255);
+  //  if()
+    analogWrite(backFan, 200);
     delay(1000);
+    analogWrite(backFan, 0);
 
 //read right sensor
      digitalWrite(trigRight, LOW);
@@ -139,33 +143,32 @@ void loop() {
 
 void turnLeft(){
 
-  backServo.write(180);
-  pushServo.write(180);
+  backServo.write(135);
+  pushServo.write(135);
   
-  analogWrite(pushFan,220);
-  analogWrite(backFan,220);
-  delay(750);
+  analogWrite(pushFan,255);
+  analogWrite(backFan,255);
+  delay(1000);
   analogWrite(backFan,0);
   analogWrite(pushFan,0);
-  analogWrite(liftFan,0);
+  //analogWrite(liftFan,0);
   pushServo.write(90);
   backServo.write(90); 
-  mpu.calcAccOffsets();
   analogWrite(liftFan,255);
+  index++;
 }
 
 void turnRight(){  
-  backServo.write(0);
-  pushServo.write(0);
-  analogWrite(pushFan,220);
-  analogWrite(backFan,220);
-  delay(750);
+  backServo.write(45);
+  pushServo.write(45);
+  analogWrite(pushFan,255);
+  analogWrite(backFan,255);
+  delay(1000);
   analogWrite(backFan,0);
   analogWrite(pushFan,0);
-  analogWrite(liftFan,0);
+  //analogWrite(liftFan,0);
   pushServo.write(90);
   backServo.write(90);
-  mpu.calcAccOffsets();
   analogWrite(liftFan,255);
-
+  index++;
 }
