@@ -11,7 +11,13 @@ The objective of this project is to implement an Autonomous Hovercraft that will
 
 
 ## DESCRIPTION: ##
+Design, analyze, simulate, build, and test a prototype of a hovercraft. This prototype will enter a competition in which the group will have to successfully fly the
+hovercraft through a maze. The hovercraft should move through the maze, making 90-degree turns, detecting an opening in a wall,etc.
+
+The final score in the competition is 𝑆 = 𝑘𝐷/(𝑇 ∙ 𝑃), where 𝑆 is the score, 𝑇 is the time
+(in seconds), 𝑃 > 0 is the number of components used in the design, 𝐷 is the distance along the track that was successfully and 𝑘 is the scaling factor equal for all teams.
 ### MAZE DIMENSIONS: ###
+The maze will have three obstacles of increasing height along the course
 ![image](https://user-images.githubusercontent.com/63077422/205738374-ab14a252-58a4-4097-a658-3d52a773ec9f.png)
 ### Material Used: ###
 - Arduino Nano;
