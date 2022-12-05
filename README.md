@@ -11,7 +11,7 @@ The objective of this project is to implement an Autonomous Hovercraft that will
 
 
 ## DESCRIPTION: ##
-### MAZE DIMENSIONS:###
+### MAZE DIMENSIONS: ###
 ![image](https://user-images.githubusercontent.com/63077422/205738374-ab14a252-58a4-4097-a658-3d52a773ec9f.png)
 ### Material Used: ###
 - Arduino Nano;
