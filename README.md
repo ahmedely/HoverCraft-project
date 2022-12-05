@@ -19,7 +19,7 @@ MAZE DIMENSIONS:
 - HC-SR04 Sensor (2 pcs);
 - GP2Y0A02YK0F Sensor (1 pc);
 - MPU6050 (Gyroscope & Accelerometer) (1 pc);
-- Styrofoam sheet;
+- Styrofoam sheet (29/35 cm);
 
 
 
