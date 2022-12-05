@@ -17,7 +17,7 @@ hovercraft through a maze. The hovercraft should move through the maze, making 9
 The final score in the competition is 𝑆 = 𝑘𝐷/(𝑇 ∙ 𝑃), where 𝑆 is the score, 𝑇 is the time
 (in seconds), 𝑃 > 0 is the number of components used in the design, 𝐷 is the distance along the track that was successfully and 𝑘 is the scaling factor equal for all teams.
 ### MAZE DIMENSIONS: ###
-The maze will have three obstacles of increasing height along the course
+
 ![image](https://user-images.githubusercontent.com/63077422/205744069-e972af9c-35cd-40d7-b755-3565f1198778.png)
 ### Material Used: ###
 - Arduino Nano;
