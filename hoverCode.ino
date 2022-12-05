@@ -7,7 +7,7 @@
 #include <MPU6050_light.h>
 
 #define liftFan  7
-#define pushFan 6                                                                                                                          //P4
+#define pushFan 6
 #define backFan 4
 
 #define trigLeft 13
@@ -16,7 +16,6 @@
 #define echoRight 2
 #define trigRight 11
 
-#define highPerfSensor 8
 
 const int backServoPin = 9;
 const int pushServoPin = 5;
@@ -33,7 +32,6 @@ int index=0;
 
 void setup() {
   
-  pinMode(highPerfSensor, INPUT);
 
   pinMode(liftFan,OUTPUT);
   pinMode(pushFan,OUTPUT);
@@ -65,7 +63,6 @@ void setup() {
    Serial.println("Done!\n");
    delay(1000);
    analogWrite(liftFan,255);
-  analogWrite(pushFan,255);
 }
 float adcVal;
 
@@ -98,8 +95,8 @@ if(index == 0){
     //break
     analogWrite(pushFan,0);
   //  if()
-    analogWrite(backFan, 200);
-    delay(1000);
+    analogWrite(backFan, 190);
+    delay(750);
     analogWrite(backFan, 0);
 
 //read right sensor
@@ -143,26 +140,24 @@ if(index == 0){
 
 void turnLeft(){
 
-  backServo.write(135);
-  pushServo.write(135);
+  backServo.write(150);
+  pushServo.write(150);
   
-  analogWrite(pushFan,255);
-  analogWrite(backFan,255);
+  analogWrite(pushFan,190);
+  analogWrite(backFan,190);
   delay(1000);
   analogWrite(backFan,0);
   analogWrite(pushFan,0);
-  //analogWrite(liftFan,0);
   pushServo.write(90);
   backServo.write(90); 
-  analogWrite(liftFan,255);
   index++;
 }
 
 void turnRight(){  
-  backServo.write(45);
-  pushServo.write(45);
-  analogWrite(pushFan,255);
-  analogWrite(backFan,255);
+  backServo.write(30);
+  pushServo.write(30);
+  analogWrite(pushFan,190);
+  analogWrite(backFan,190);
   delay(1000);
   analogWrite(backFan,0);
   analogWrite(pushFan,0);
