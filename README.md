@@ -1,8 +1,7 @@
 # HoverCraft Project ~~ TEAM 8
 
 ## TEAM MEMBERS: ## 
-Abdallah, Yasmine :  @yassoabd 
-
+Abdallah, Yasmine :  
 El Yamani, Ahmed :  
 Pedroza Hernandez, Marcelo :  
 Shirazi, Aryan :  
