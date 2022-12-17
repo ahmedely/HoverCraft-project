@@ -21,18 +21,18 @@ The final score in the competition is 𝑆 = 𝑘𝐷/(𝑇 ∙ 𝑃), where �
 ![image](https://user-images.githubusercontent.com/63077422/205744069-e972af9c-35cd-40d7-b755-3565f1198778.png)
 ### Material Used: ###
 - Arduino Nano;
-- HS-311 Servos (2 pcs);
-- AFB1212SH Fan (1 pc);
-- MEC0251V1 Fan (2 pcs);
-- Li-Po Rhino 460 (2 pcs);
-- HC-SR04 Sensor (2 pcs);
-- GP2Y0A02YK0F Sensor (1 pc);
-- MPU6050 (Gyroscope & Accelerometer) (1 pc);
+- HS-311 Servos (x2);
+- AFB1212SH Fan;
+- MEC0251V1 Fan (x2);
+- Li-Po Rhino 460 (x2);
+- HC-SR04 Sensor (x2);
+- GP2Y0A02YK0F Sensor;
+- MPU6050 (Gyroscope & Accelerometer);
 - Styrofoam sheet (29/35 cm);
 
 
 ## PREVIEW: ##
-<img src="https://user-images.githubusercontent.com/63077422/208224457-23b00c39-f82f-4a76-bf67-db8e6bbd7924.png" width="10" height="10")>
+![Side](https://user-images.githubusercontent.com/63077422/208224457-23b00c39-f82f-4a76-bf67-db8e6bbd7924.png)
 ![Side2](https://user-images.githubusercontent.com/63077422/208224473-7d361f2c-6917-4321-9388-bc43b52cf97e.png)
 ![front](https://user-images.githubusercontent.com/63077422/208224479-ba18960b-b61c-4c10-9dd8-c4bb7d088937.png)
 ![back](https://user-images.githubusercontent.com/63077422/208224487-b07e056f-9840-419a-96b4-24002aaa970c.png)
