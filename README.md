@@ -32,6 +32,7 @@ The final score in the competition is 𝑆 = 𝑘𝐷/(𝑇 ∙ 𝑃), where �
 
 
 ## PREVIEW: ##
+<p align="center">
 ![Side](https://user-images.githubusercontent.com/63077422/208224457-23b00c39-f82f-4a76-bf67-db8e6bbd7924.png)
 ![Side2](https://user-images.githubusercontent.com/63077422/208224473-7d361f2c-6917-4321-9388-bc43b52cf97e.png)
 ![front](https://user-images.githubusercontent.com/63077422/208224479-ba18960b-b61c-4c10-9dd8-c4bb7d088937.png)
@@ -39,3 +40,4 @@ The final score in the competition is 𝑆 = 𝑘𝐷/(𝑇 ∙ 𝑃), where �
 ![skirt](https://user-images.githubusercontent.com/63077422/208224492-76ee4eaa-ceb2-4ef7-a41a-2d3540827ff1.png)
 
 
+</p>
