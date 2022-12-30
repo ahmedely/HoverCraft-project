@@ -1,10 +1,10 @@
 # HoverCraft Project ~~ TEAM 8
 
 ## TEAM MEMBERS: ## 
-@yassoabd  
-@phmarcel0x    
-@AryanSh1380  
-@ahmedely  
+[@yassoabd ] (https://github.com/yassoabd)  
+[@phmarcel0x](https://github.com/phmarcel0x)  
+[@AryanSh1380](https://github.com/AryanSh1380?tab=repositories)  
+[@ahmedely](https://github.com/ahmedely)  
   
 ## OBJECTIVE: ##
 The objective of this project is to implement an Autonomous Hovercraft that will race on a specified course in less than 2 minutes with less collision possible.
