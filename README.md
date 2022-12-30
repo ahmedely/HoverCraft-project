@@ -1,7 +1,7 @@
 # HoverCraft Project ~~ TEAM 8
 
 ## TEAM MEMBERS: ## 
-[@yassoabd ] (https://github.com/yassoabd)  
+[@yassoabd](https://github.com/yassoabd)  
 [@phmarcel0x](https://github.com/phmarcel0x)  
 [@AryanSh1380](https://github.com/AryanSh1380?tab=repositories)  
 [@ahmedely](https://github.com/ahmedely)  
