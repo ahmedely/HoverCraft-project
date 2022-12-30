@@ -1,10 +1,10 @@
 # HoverCraft Project ~~ TEAM 8
 
 ## TEAM MEMBERS: ## 
-Abdallah, Yasmine :  
-El Yamani, Ahmed :  
-Pedroza Hernandez, Marcelo :  
-Shirazi, Aryan :  
+@yassoabd
+@phmarcel0x  
+@AryanSh1380
+@ahmedely
   
 ## OBJECTIVE: ##
 The objective of this project is to implement an Autonomous Hovercraft that will race on a specified course in less than 2 minutes with less collision possible.
